@@ -8,4 +8,6 @@ TEST_CASE("asd")
     emac.phy.address.busy(true);
     emac.phy.address.number(12);
 
+    emac.phy.address.speed(emac::phy::address::Speed::L4_10);
+
 }
