@@ -13,9 +13,11 @@
 #include "phy_status.h"
 #include "configuration.h"
 #include "descriptor_tx.h"
+#include "descriptor_tx_short.h"
 #include "dma_address_transmit.h"
 #include "dma_operation.h"
 #include "dma_bus.h"
+#include "dma_poll_tx.h"
 
 int main()
 {
@@ -28,7 +30,7 @@ int main()
     auto * dma_bus = (Dma_bus *) (base + 0x1000	);
     auto * dma_address_transmit = (Dma_address_transmit *) (base + 0x1010);
     auto * dma_operation = (Dma_operation *) (base + 0x1018);
-
+    auto * dma_poll_tx = (Dma_poll_tx *) (base + 0x1004);
     
 
     phy_control->number_device(1);
@@ -44,22 +46,21 @@ int main()
         link = phy_data->get() & 0x1;
     }
 
-    configuration->
-    configuration->preamble(Configuration::Preamble::SEVEN);
+    //configuration->preamble(Configuration::Preamble::SEVEN);
     configuration->transmit_machine(true);
     auto up = configuration->link();
     configuration->full_duplex(true);
-    configuration->speed(Configuration::Speed::_100);
-    configuration->interface(Configuration::Interface::GMII);
-    configuration->forwarding(true);
+    //configuration->speed(Configuration::Speed::_100);
+    //configuration->interface(Configuration::Interface::GMII);
+    //configuration->forwarding(true);
 
     auto mode = phy_status->mode();
     auto speed = phy_status->speed();
     bool ll = phy_status->link();
 
     // dma_bus->reset(true);
-    dma_bus->descriptor(Dma_bus::Descriptor::EXTENDED);
-    dma_bus->beats(32);
+    dma_bus->descriptor(Dma_bus::Descriptor::NORMAL);
+    //dma_bus->beats(32);
 
 
     unsigned char buffer[64];
@@ -70,22 +71,30 @@ int main()
     desc.first(true);
     desc.crc(true);
     desc.padding(true);
-    desc.crc_insertion(Descriptor_tx::Crc_insertion::IP_HEADER_PAYLOAD_PSEUDOHEADER);
+    desc.crc_insertion(Descriptor_tx::Crc_insertion::IP_HEADER_PAYLOAD);
     desc.ring_end(true);
 
-    memset(buffer, 0xee, 64);
+    memset(buffer, 0xff, 64);
     desc.pointer(0, buffer);
     //desc.pointer(1, buffer);
-    desc.size(0, 32);
+    desc.size(0, 60); // przy MTL thr 16 + 16 bajtach underflow
     //desc.size(1, 32);
 
     dma_address_transmit->set(&desc);
 
     dma_operation->transmit(true);
 
-    desc.own(true);
+    while(1)
+    {
+        desc.own(true);
+        dma_poll_tx->demand();
 
-    while(1);
+        for (int i = 0; i < 100000; i++)
+        {
+            
+        }
+        
+    }
 }
 
 #endif
