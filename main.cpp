@@ -81,28 +81,32 @@ int main()
 
     Emac emac(base);
     Ksz9021 ksz(emac.phy, 1, Emac_phy::Speed::DIV_102);
+    
+    ksz.reset();
+    // ksz.advertisement_set();
+    ksz.loopback(true);
+    //ksz.negotiate();
+    // ksz.link_wait();
+    // auto [speed, duplex] = ksz.link_params();
+
+
+
 
     auto * configuration = (Configuration *) (base + 0);
     auto * dma_bus = (Dma_bus *) (base + 0x1000	);
     auto * dma_address_transmit = (Dma_address_transmit *) (base + 0x1010);
     auto * dma_operation = (Dma_operation *) (base + 0x1018);
     auto * dma_poll_tx = (Dma_poll_tx *) (base + 0x1004);
-    
-    ksz.reset();
-    ksz.advertisement_set();
-    ksz.negotiate();
-    ksz.link_wait();
-    auto [speed, duplex] = ksz.link_params();
 
-
-
-
-    //configuration->preamble(Configuration::Preamble::SEVEN);
+    configuration->preamble(Configuration::Preamble::SEVEN);
     configuration->transmit_machine(true);
-    auto up = configuration->link();
+    configuration->receive_machine(true);
     configuration->full_duplex(true);
-    //configuration->speed(Configuration::Speed::_100);
-    //configuration->interface(Configuration::Interface::GMII);
+    configuration->interface(Configuration::Interface::GMII);
+    configuration->bursting(true);
+    configuration->watchdog(false);
+    configuration->jabber(false);
+    configuration->loopback(true);
     //configuration->forwarding(true);
 
     // dma_bus->reset(true);
@@ -130,6 +134,7 @@ int main()
     dma_address_transmit->set(&desc);
 
     dma_operation->transmit(true);
+    dma_operation->receive(true);
 
     while(1)
     {

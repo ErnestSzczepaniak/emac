@@ -48,6 +48,9 @@ public:
     void full_duplex(bool value);
     bool full_duplex();
 
+    void loopback(bool value);
+    bool loopback();
+
     void speed(Speed value);
     Speed speed();
 
@@ -56,6 +59,12 @@ public:
 
     void bursting(bool value);
     bool bursting();
+
+    void jabber(bool value);
+    bool jabber();
+
+    void watchdog(bool value);
+    bool watchdog();
 
     void forwarding(bool value);
     bool forwarding();

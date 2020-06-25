@@ -29,6 +29,7 @@ public:
     Ksz9021(Emac_phy * emac_phy, int device, Emac_phy::Speed speed);
 
     void reset();
+    void loopback(bool value);
     void advertisement_set();
     void negotiate();
     void link_wait();

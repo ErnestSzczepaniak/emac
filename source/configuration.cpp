@@ -50,6 +50,16 @@ bool Configuration::full_duplex()
     return get(11, 1);
 }
 
+void Configuration::loopback(bool value)
+{
+    set(value, 12, 1);
+}
+
+bool Configuration::loopback()
+{
+    return get(12, 1);
+}
+
 void Configuration::speed(Speed value)
 {
     set(value, 14, 1);
@@ -69,7 +79,6 @@ Configuration::Interface Configuration::interface()
 {
     return get<Interface>(15, 1);
 }
-
 void Configuration::bursting(bool value)
 {
     set(value, 21, 1);
@@ -78,6 +87,26 @@ void Configuration::bursting(bool value)
 bool Configuration::bursting()
 {
     return get(21, 1);
+}
+
+void Configuration::jabber(bool value) // inverse
+{
+    set(!value, 22, 1);
+}
+
+bool Configuration::jabber()
+{
+    return !get(22, 1);
+}
+
+void Configuration::watchdog(bool value) // inverse
+{
+    set(!value, 23, 1);
+}
+
+bool Configuration::watchdog()
+{
+    return !get(23, 1);
 }
 
 void Configuration::forwarding(bool value)

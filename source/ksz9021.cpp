@@ -1,8 +1,8 @@
 #include "ksz9021.h"
 
-Ksz9021::Ksz9021(Emac_phy * emac_phy, int device, Emac_phy::Speed speed)
+Ksz9021::Ksz9021(Emac_phy * phy, int device, Emac_phy::Speed speed)
 :
-_phy(_phy),
+_phy(phy),
 _device(device),
 _speed(speed)
 {
@@ -14,6 +14,16 @@ void Ksz9021::reset()
     auto control = _read(address_basic_control);
 
     control |= 0x8000;
+
+    _write(address_basic_control, control);
+}
+
+void Ksz9021::loopback(bool value)
+{
+    auto control = _read(address_basic_control);
+
+    if (value) control |= 0x4000;
+    else control &= ~0x4000;
 
     _write(address_basic_control, control);
 }
@@ -37,16 +47,16 @@ void Ksz9021::negotiate()
 {
     auto control = _read(address_basic_control);
 
-    control |= 0x900; // enable negotiation + reset negotiation
+    control |= 0x200; // reset negotiation
 
     _write(address_basic_control, control);
 
-    while(_read(address_basic_status) & 0x20); // poll autonegotiation compleate
+    while((_read(address_basic_status) & 0x20) == false); // poll autonegotiation compleate
 }
 
 void Ksz9021::link_wait()
 {
-    while(_read(address_basic_status) & 0x4); // poll autonegotiation compleate
+    while((_read(address_basic_status) & 0x4) == false); // poll link up
 }
 
 Ksz9021::Link Ksz9021::link_params()
