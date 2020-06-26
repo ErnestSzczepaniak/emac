@@ -72,11 +72,36 @@ bit gli w dma status przerwanie i zmiana linku ?
 
 
 
+/*
+
+TXCLK H19
+TXEN A20
+TXD0 F20
+TXD1 J19
+TXD2 F21
+TXD3 F19
+
+RXCLK G20
+RXDV K17
+RXD0 A21 
+RXD1 B20
+RXD2 B18
+RXD3 D21
+
+*/
+
+
+
 #include "emac.h"
 #include "ksz9021.h"
 
 int main()
 {
+    auto * emac1clk = (unsigned int *) 0xffd0408c;
+    //*emac1clk = 7;
+
+
+
     unsigned int base = 0xFF702000;
 
     Emac emac(base);
@@ -84,10 +109,10 @@ int main()
     
     ksz.reset();
     // ksz.advertisement_set();
-    ksz.loopback(true);
-    //ksz.negotiate();
-    // ksz.link_wait();
-    // auto [speed, duplex] = ksz.link_params();
+    // ksz.loopback(true);
+    ksz.negotiate();
+    ksz.link_wait();
+    auto [speed, duplex] = ksz.link_params();
 
 
 
@@ -102,7 +127,11 @@ int main()
     configuration->transmit_machine(true);
     configuration->receive_machine(true);
     configuration->full_duplex(true);
-    configuration->interface(Configuration::Interface::GMII);
+
+    configuration->interface(Configuration::Interface::MII);
+    configuration->speed(Configuration::Speed::_100);
+
+
     configuration->bursting(true);
     configuration->watchdog(false);
     configuration->jabber(false);
@@ -115,6 +144,9 @@ int main()
 
 
     unsigned char buffer[64];
+
+
+
     Descriptor_tx desc;
 
     desc.own(true);
@@ -125,7 +157,15 @@ int main()
     desc.crc_insertion(Descriptor_tx::Crc_insertion::IP_HEADER_PAYLOAD);
     desc.ring_end(true);
 
-    memset(buffer, 0xff, 64);
+    for (int i = 0; i < 64; i++)
+    {
+        buffer[i] = i;
+    }
+    
+    memset(buffer, 0xff, 6);
+
+
+
     desc.pointer(0, buffer);
     //desc.pointer(1, buffer);
     desc.size(0, 60); // przy MTL thr 16 + 16 bajtach underflow
