@@ -9,17 +9,22 @@
  * @details	
 **/
 
-#include "emac_phy.h"
-
+#include "emac_configuration.h"
+#include "emac_filter.h"
 
 class Emac
 {
+    static constexpr auto address_permodrst = 0xffd05014;
+    static constexpr auto address_manager_control = 0xffd08060;
+
 public:
     Emac(unsigned int base);
 
-    Emac_phy * phy;
+    void init();
+
+    Emac_configuration * configuration;
+    Emac_filter * filter;
 
 }; /* class: Emac */
-
 
 #endif /* define: emac_h */

@@ -6,16 +6,7 @@
 
 #else
 
-#include "string.h"
 #include "build.h"
-#include "emac_phy.h"
-#include "configuration.h"
-#include "descriptor_tx.h"
-#include "descriptor_tx_short.h"
-#include "dma_address_transmit.h"
-#include "dma_operation.h"
-#include "dma_bus.h"
-#include "dma_poll_tx.h"
 
  // !: konfiguracja phy
  /*
@@ -93,98 +84,91 @@ RXD3 D21
 
 
 #include "emac.h"
-#include "ksz9021.h"
+// #include "ksz9021.h"
 
 int main()
 {
-    auto * emac1clk = (unsigned int *) 0xffd0408c;
-    //*emac1clk = 7;
+    Emac emac(0xff702000);
 
+    emac.init();
 
+    /* ---------------------------------------------| info |--------------------------------------------- */
 
-    unsigned int base = 0xFF702000;
-
-    Emac emac(base);
-    Ksz9021 ksz(emac.phy, 1, Emac_phy::Speed::DIV_102);
+    // unsigned int base = 0xFF702000;
+    // Emac emac(base);
+    // Ksz9021 ksz(emac.phy, 1, Emac_phy::Speed::DIV_102);
     
-    ksz.reset();
-    // ksz.advertisement_set();
-    // ksz.loopback(true);
-    ksz.negotiate();
-    ksz.link_wait();
-    auto [speed, duplex] = ksz.link_params();
+    // ksz.reset();
+    // //ksz.advertisement_set();
+    // //ksz.loopback(true);
+    // ksz.negotiate();
+    // ksz.link_wait();
+    // auto [speed, duplex] = ksz.link_params();
+
+    // auto * configuration = (Configuration *) (base + 0);
+    // auto * dma_bus = (Dma_bus *) (base + 0x1000	);
+    // auto * dma_address_transmit = (Dma_address_transmit *) (base + 0x1010);
+    // auto * dma_operation = (Dma_operation *) (base + 0x1018);
+    // auto * dma_poll_tx = (Dma_poll_tx *) (base + 0x1004);
+
+    // configuration->preamble(Configuration::Preamble::SEVEN);
+    // configuration->transmit_machine(true);
+    // configuration->receive_machine(true);
+    // configuration->full_duplex(true);
+
+    // configuration->bursting(true);
+    // configuration->watchdog(false);
+    // configuration->jabber(false);
+    // //configuration->loopback(true);
+    // //configuration->forwarding(true);
+
+    // // dma_bus->reset(true);
+    // dma_bus->descriptor(Dma_bus::Descriptor::NORMAL);
+    // //dma_bus->beats(32);
 
 
+    // unsigned char buffer[64];
 
+    // Descriptor_tx desc;
 
-    auto * configuration = (Configuration *) (base + 0);
-    auto * dma_bus = (Dma_bus *) (base + 0x1000	);
-    auto * dma_address_transmit = (Dma_address_transmit *) (base + 0x1010);
-    auto * dma_operation = (Dma_operation *) (base + 0x1018);
-    auto * dma_poll_tx = (Dma_poll_tx *) (base + 0x1004);
+    // desc.own(true);
+    // desc.last(true);
+    // desc.first(true);
+    // desc.crc(true);
+    // desc.padding(true);
+    // desc.crc_insertion(Descriptor_tx::Crc_insertion::IP_HEADER_PAYLOAD);
+    // desc.ring_end(true);
 
-    configuration->preamble(Configuration::Preamble::SEVEN);
-    configuration->transmit_machine(true);
-    configuration->receive_machine(true);
-    configuration->full_duplex(true);
+    // auto * t = "pizdeczka";
 
-    configuration->interface(Configuration::Interface::MII);
-    configuration->speed(Configuration::Speed::_100);
-
-
-    configuration->bursting(true);
-    configuration->watchdog(false);
-    configuration->jabber(false);
-    configuration->loopback(true);
-    //configuration->forwarding(true);
-
-    // dma_bus->reset(true);
-    dma_bus->descriptor(Dma_bus::Descriptor::NORMAL);
-    //dma_bus->beats(32);
-
-
-    unsigned char buffer[64];
-
-
-
-    Descriptor_tx desc;
-
-    desc.own(true);
-    desc.last(true);
-    desc.first(true);
-    desc.crc(true);
-    desc.padding(true);
-    desc.crc_insertion(Descriptor_tx::Crc_insertion::IP_HEADER_PAYLOAD);
-    desc.ring_end(true);
-
-    for (int i = 0; i < 64; i++)
-    {
-        buffer[i] = i;
-    }
+    // for (int i = 0; i < 64; i++)
+    // {
+    //     buffer[i] = i;
+    // }
     
-    memset(buffer, 0xff, 6);
+    // memset(buffer, 0xff, 6);
+    // memcpy(&buffer[6], t, strlen(t));
 
 
+    // desc.pointer(0, buffer);
+    // //desc.pointer(1, buffer);
+    // desc.size(0, 60); // przy MTL thr 16 + 16 bajtach underflow
+    // //desc.size(1, 32);
 
-    desc.pointer(0, buffer);
-    //desc.pointer(1, buffer);
-    desc.size(0, 60); // przy MTL thr 16 + 16 bajtach underflow
-    //desc.size(1, 32);
+    // dma_address_transmit->set(&desc);
 
-    dma_address_transmit->set(&desc);
-
-    dma_operation->transmit(true);
-    dma_operation->receive(true);
+    // dma_operation->transmit(true);
+    // dma_operation->receive(true);
 
     while(1)
     {
-        desc.own(true);
-        dma_poll_tx->demand();
+        // desc.own(true);
+        // dma_poll_tx->demand();
 
-        for (int i = 0; i < 100000; i++)
-        {
+        // for (int i = 0; i < 100000; i++)
+        // {
             
-        }
+        // }
         
     }
 }

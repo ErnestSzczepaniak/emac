@@ -1,16 +1,16 @@
-#ifndef _register_h
-#define _register_h
+#ifndef _emac_register_h
+#define _emac_register_h
 
 /**
- * @file	register.h
+ * @file	emac_register.h
  * @author	en2
- * @date	22-06-2020
+ * @date	27-06-2020
  * @brief	
  * @details	
 **/
 
 template<int span = 1>
-class Register
+class Emac_register
 {
 public:
     template<typename T = unsigned int> T get(int offset = 0, int size = 32, int position = 0)
@@ -31,6 +31,6 @@ public:
     }
 
     unsigned int value[span];
-}; /* class: Register */
+}; /* class: Emac_register */
 
-#endif /* define: register_h */
+#endif /* define: emac_register_h */
