@@ -85,12 +85,18 @@ RXD3 D21
 
 #include "emac.h"
 // #include "ksz9021.h"
+#include "emac_descriptor.h"
+#include "emac_descriptor_transmit.h"
 
 int main()
 {
     Emac emac(0xff702000);
 
-    emac.init();
+
+    Emac_descriptor d;
+    d.reset();
+
+    d.own(true);
 
     /* ---------------------------------------------| info |--------------------------------------------- */
 

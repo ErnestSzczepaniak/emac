@@ -1,5 +1,10 @@
 #include "emac_configuration.h"
 
+Emac_configuration::Emac_configuration(unsigned int base) : Emac_register(base)
+{
+    
+}
+
 void Emac_configuration::preamble(Preamble value)
 {
     set(value, 0, 2);

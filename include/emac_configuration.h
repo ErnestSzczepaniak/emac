@@ -11,7 +11,7 @@
 
 #include "emac_register.h"
 
-class Emac_configuration : public Emac_register<>
+class Emac_configuration : public Emac_register
 {
 public:
     enum class Preamble : unsigned char 
@@ -53,6 +53,8 @@ public:
         _48,
         _40
     }; /* enum: Interframe_gap */
+
+    Emac_configuration(unsigned int base);
 
     void preamble(Preamble value);
     Preamble preamble();

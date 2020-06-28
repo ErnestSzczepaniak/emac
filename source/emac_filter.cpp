@@ -1,5 +1,10 @@
 #include "emac_filter.h"
 
+Emac_filter::Emac_filter(unsigned int base) : Emac_register(base)
+{
+
+}
+
 void Emac_filter::all_pass(bool value)
 {
     set(value, 0, 1);

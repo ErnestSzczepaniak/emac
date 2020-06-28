@@ -11,6 +11,8 @@
 
 #include "emac_configuration.h"
 #include "emac_filter.h"
+#include "emac_phy.h"
+#include "emac_dma.h"
 
 class Emac
 {
@@ -22,8 +24,10 @@ public:
 
     void init();
 
-    Emac_configuration * configuration;
-    Emac_filter * filter;
+    Emac_configuration configuration;
+    Emac_filter filter;
+    Emac_phy phy;
+    Emac_dma dma;
 
 }; /* class: Emac */
 

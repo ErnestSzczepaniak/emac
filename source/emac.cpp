@@ -2,20 +2,22 @@
 
 Emac::Emac(unsigned int base)
 :
-configuration((Emac_configuration *) (base + 0x0)),
-filter((Emac_filter *) + (base + 0x4))
+configuration(base + 0x0),
+filter(base + 0x4),
+phy(base + 0x10),
+dma(base + 0x1000)
 {
 
 }
 
 void Emac::init()
 {
-    auto * permodrst = (Emac_register<> *) address_permodrst;
-    auto * manager_control = (Emac_register<> *) address_manager_control;
+    Emac_register manager_control(address_manager_control);
+    Emac_register permodrst(address_permodrst);
 
-    permodrst->set(true, 1, 1); // emac into reset
+    permodrst.set(true, 1, 1); // emac into reset
 
-    manager_control->set(0x1, 2, 2); // physel to RGMII
+    manager_control.set(0x1, 2, 2); // physel to RGMII
 
-    permodrst->set(false, 1, 1); // emac out of reset
+    permodrst.set(false, 1, 1); // emac out of reset
 }

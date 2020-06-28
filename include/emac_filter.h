@@ -11,7 +11,7 @@
 
 #include "emac_register.h"
 
-class Emac_filter : public Emac_register<>
+class Emac_filter : public Emac_register
 {
 public:
     enum class Type : unsigned char
@@ -27,6 +27,8 @@ public:
         PASSED_ADDRESS_FILTERING,
         FAILED_ADDRESS_FILTERING
     }; /* enum: Control */
+
+    Emac_filter(unsigned int base);
 
     void all_pass(bool value);
     bool all_pass();
