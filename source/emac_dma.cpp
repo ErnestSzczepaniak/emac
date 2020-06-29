@@ -8,7 +8,8 @@ poll_receive(base + 0x8),
 address_descriptor_list_receive(base + 0xc),
 address_descriptor_list_transmit(base + 0x10),
 status(base + 0x14),
-operation(base + 0x18)
+operation(base + 0x18),
+interrupt(base + 0x1c)
 {
 
 }

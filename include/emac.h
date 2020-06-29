@@ -13,6 +13,8 @@
 #include "emac_filter.h"
 #include "emac_phy.h"
 #include "emac_dma.h"
+#include "emac_descriptor_transmit.h"
+#include "emac_descriptor_receive.h"
 
 class Emac
 {
@@ -24,10 +26,25 @@ public:
 
     void init();
 
+    unsigned char * buffer_transmit(int index = 0);
+    void send(int index = 0, int size = 8192);
+
+
     Emac_configuration configuration;
     Emac_filter filter;
     Emac_phy phy;
     Emac_dma dma;
+
+protected:
+    void _init_descriptor_transmit();
+    void _init_descriptor_receive();
+
+private:
+    Emac_descriptor_transmit _descriptor_transmit;
+    Emac_descriptor_receive _descriptor_receive;
+
+    unsigned char _buffer_transmit[2][8192];
+    unsigned char _buffer_receive[2][8192];
 
 }; /* class: Emac */
 

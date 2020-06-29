@@ -92,11 +92,9 @@ int main()
 {
     Emac emac(0xff702000);
 
+    emac.init();
 
-    Emac_descriptor d;
-    d.reset();
-
-    d.own(true);
+    emac.send(1, 60);
 
     /* ---------------------------------------------| info |--------------------------------------------- */
 

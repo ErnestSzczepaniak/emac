@@ -7,6 +7,11 @@ Emac_register((unsigned int) _descriptor, 4)
 
 }
 
+unsigned int * Emac_descriptor::address()
+{
+    return _descriptor;
+}
+
 void Emac_descriptor::own(bool value)
 {
     set(value, 31, 1, 0);

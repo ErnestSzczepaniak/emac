@@ -32,10 +32,10 @@ public:
     void first(bool value);
     bool is_first();
 
-    void enable_crc(bool value); // inverse
+    void enable_crc(bool value);
     bool is_enabled_crc();
 
-    void enable_padding(bool value); //inverse
+    void enable_padding(bool value);
     bool is_enabled_padding();
 
     void enable_timestamp(bool value);
@@ -64,6 +64,7 @@ public:
     bool is_error_deferral_excessive();
     bool is_error_underflow();
     bool is_error_half_duplex_deferred();
+    
 }; /* class: Descriptor_tx */
 
 #endif /* define: emac_descriptor_transmit_h */

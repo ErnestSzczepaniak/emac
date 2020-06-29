@@ -16,6 +16,8 @@ class Emac_descriptor : public Emac_register
 public:
     Emac_descriptor();
 
+    unsigned int * address();
+
     void own(bool value);
     bool own();   
 

@@ -13,6 +13,7 @@
 #include "emac_dma_bus.h"
 #include "emac_dma_status.h"
 #include "emac_dma_operation.h"
+#include "emac_dma_interrupt.h"
 
 class Emac_dma
 {
@@ -29,6 +30,8 @@ public:
 
     Emac_dma_status status;
     Emac_dma_operation operation;
+    Emac_dma_interrupt interrupt;
+
 
 }; /* class: Emac_dma */
 

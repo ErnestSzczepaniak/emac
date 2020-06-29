@@ -20,4 +20,55 @@ void Emac::init()
     manager_control.set(0x1, 2, 2); // physel to RGMII
 
     permodrst.set(false, 1, 1); // emac out of reset
+
+    _init_descriptor_transmit();
+
+    // pobranie speed z ksz
+
+    configuration.crc_check(true);
+    configuration.duplex(Emac_configuration::Duplex::FULL);
+    configuration.speed(Emac_configuration::Speed::_1000_BASE_T);
+    configuration.transmitter_jabber(false);
+    configuration.receiver_watchdog(false);
+    configuration.transmit_machine(true);
+
+    dma.bus.burst(Emac_dma_bus::Burst::FIXED);
+    dma.operation.transmit(true);
+    dma.address_descriptor_list_transmit.set(_descriptor_transmit.address());
+}
+
+unsigned char * Emac::buffer_transmit(int index)
+{
+    return &_buffer_transmit[index][0];
+}
+
+void Emac::send(int index, int size)
+{
+    _descriptor_transmit.size(index, size);
+    _descriptor_transmit.own(true);
+
+    dma.poll_transmit.set(1);
+}
+
+/* ---------------------------------------------| info |--------------------------------------------- */
+
+void Emac::_init_descriptor_transmit()
+{
+    _descriptor_transmit.reset();
+
+    _descriptor_transmit.first(true);
+    
+    _descriptor_transmit.pointer(0, &_buffer_transmit[0][0]);
+    _descriptor_transmit.pointer(1, &_buffer_transmit[1][0]);
+
+    _descriptor_transmit.enable_crc(true);
+    _descriptor_transmit.enable_padding(true);
+
+    _descriptor_transmit.last(true);
+    _descriptor_transmit.ring_end(true);
+}
+
+void Emac::_init_descriptor_receive()
+{
+
 }
