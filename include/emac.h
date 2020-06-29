@@ -43,8 +43,8 @@ private:
     Emac_descriptor_transmit _descriptor_transmit;
     Emac_descriptor_receive _descriptor_receive;
 
-    unsigned char _buffer_transmit[2][8192];
-    unsigned char _buffer_receive[2][8192];
+    unsigned char _buffer_transmit[2][4096];
+    unsigned char _buffer_receive[2][4096];
 
 }; /* class: Emac */
 

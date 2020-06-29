@@ -94,3 +94,14 @@ bool Emac_descriptor_receive::is_available_extended_status()
 {
     return get(0, 1);
 }
+
+void Emac_descriptor_receive::ring_end(bool value)
+{
+    set(value, 15, 1, 1);
+}
+
+bool Emac_descriptor_receive::ring_end()
+{
+    return get(15, 1, 1);
+}
+

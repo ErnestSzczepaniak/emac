@@ -87,6 +87,7 @@ RXD3 D21
 // #include "ksz9021.h"
 #include "emac_descriptor.h"
 #include "emac_descriptor_transmit.h"
+#include "string.h"
 
 int main()
 {
@@ -94,7 +95,22 @@ int main()
 
     emac.init();
 
-    emac.send(1, 60);
+    auto * buffer = emac.buffer_transmit();
+    memset(buffer, 0xff, 6);
+
+    while(1)
+    {
+        //emac.send(0, 60);
+
+        for (int i = 0; i < 10000; i++)
+        {
+            
+        }
+        
+    }
+    
+
+    
 
     /* ---------------------------------------------| info |--------------------------------------------- */
 

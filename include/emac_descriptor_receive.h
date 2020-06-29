@@ -30,6 +30,9 @@ public:
     void last(bool value);
     bool is_last();
 
+    void ring_end(bool value);
+    bool ring_end();
+
     bool is_available_timestamp();
     bool is_error_collision_late();
     bool is_frame_ethernet();

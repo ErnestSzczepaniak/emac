@@ -22,19 +22,22 @@ void Emac::init()
     permodrst.set(false, 1, 1); // emac out of reset
 
     _init_descriptor_transmit();
+    _init_descriptor_receive();
 
     // pobranie speed z ksz
 
     configuration.crc_check(true);
     configuration.duplex(Emac_configuration::Duplex::FULL);
     configuration.speed(Emac_configuration::Speed::_1000_BASE_T);
-    configuration.transmitter_jabber(false);
-    configuration.receiver_watchdog(false);
     configuration.transmit_machine(true);
+    configuration.receive_machine(true);
 
-    dma.bus.burst(Emac_dma_bus::Burst::FIXED);
-    dma.operation.transmit(true);
     dma.address_descriptor_list_transmit.set(_descriptor_transmit.address());
+    dma.address_descriptor_list_receive.set(_descriptor_receive.address());
+
+    dma.operation.transmit_when_full(true);
+    dma.operation.transmit(true);
+    dma.operation.receive(true);
 }
 
 unsigned char * Emac::buffer_transmit(int index)
@@ -70,5 +73,15 @@ void Emac::_init_descriptor_transmit()
 
 void Emac::_init_descriptor_receive()
 {
+    _descriptor_receive.reset();
 
+    _descriptor_receive.size(0, 4096);
+    _descriptor_receive.size(1, 4096);
+
+    _descriptor_receive.pointer(0, &_buffer_receive[0][0]);
+    _descriptor_receive.pointer(1, &_buffer_receive[1][0]);
+
+    _descriptor_receive.ring_end(true);
+
+    _descriptor_receive.own(true);
 }

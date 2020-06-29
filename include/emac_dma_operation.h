@@ -89,9 +89,6 @@ public:
     void drop_crc_error_frames(bool value);
     bool drop_crc_error_frames();
 
-    void full_start(bool value);
-    bool full_start();
-
 }; /* class: Emac_dma_operation */
 
 #endif /* define: emac_dma_operation_h */

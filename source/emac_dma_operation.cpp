@@ -154,3 +154,4 @@ bool Emac_dma_operation::drop_crc_error_frames()
 {
     return get(26, 1);
 }
+
