@@ -15,6 +15,8 @@
 #include "emac_dma.h"
 #include "emac_descriptor_transmit.h"
 #include "emac_descriptor_receive.h"
+#include "emac_interrupt_mask.h"
+#include "emac_interrupt_status.h"
 
 class Emac
 {
@@ -35,13 +37,17 @@ public:
     Emac_phy phy;
     Emac_dma dma;
 
+    Emac_interrupt_mask interrupt_mask;
+    Emac_interrupt_status interrupt_status;
+
+    Emac_descriptor_transmit _descriptor_transmit;
+    Emac_descriptor_receive _descriptor_receive;
+
 protected:
     void _init_descriptor_transmit();
     void _init_descriptor_receive();
 
 private:
-    Emac_descriptor_transmit _descriptor_transmit;
-    Emac_descriptor_receive _descriptor_receive;
 
     unsigned char _buffer_transmit[2][4096];
     unsigned char _buffer_receive[2][4096];

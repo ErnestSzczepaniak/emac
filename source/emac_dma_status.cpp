@@ -70,9 +70,19 @@ bool Emac_dma_status::packed_filled()
     return get(14, 1);
 }
 
+void Emac_dma_status::abnormal_interrupt_summary(bool value)
+{
+    set(value, 15, 1);
+}
+
 bool Emac_dma_status::abnormal_interrupt_summary()
 {
     return get(15, 1);
+}
+
+void Emac_dma_status::normal_interrupt_summary(bool value)
+{
+    set(value, 16, 1);
 }
 
 bool Emac_dma_status::normal_interrupt_summary()

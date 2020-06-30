@@ -53,8 +53,13 @@ public:
     bool fifo_transfered();
     bool error_bus();
     bool packed_filled();
+
+    void abnormal_interrupt_summary(bool value);
     bool abnormal_interrupt_summary();
+
+    void normal_interrupt_summary(bool value);
     bool normal_interrupt_summary();
+
     State_receive state_receive();
     State_transmit state_transmi();
     bool error_bus_type();

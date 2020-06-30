@@ -5,6 +5,8 @@ Emac::Emac(unsigned int base)
 configuration(base + 0x0),
 filter(base + 0x4),
 phy(base + 0x10),
+interrupt_status(base + 0x38),
+interrupt_mask(base + 0x3c),
 dma(base + 0x1000)
 {
 
@@ -32,8 +34,13 @@ void Emac::init()
     configuration.transmit_machine(true);
     configuration.receive_machine(true);
 
+    interrupt_mask.rgmii(true);
+
     dma.address_descriptor_list_transmit.set(_descriptor_transmit.address());
     dma.address_descriptor_list_receive.set(_descriptor_receive.address());
+
+    dma.interrupt.normal(true);
+    dma.interrupt.receive(true);
 
     dma.operation.transmit_when_full(true);
     dma.operation.transmit(true);
@@ -59,7 +66,6 @@ void Emac::_init_descriptor_transmit()
 {
     _descriptor_transmit.reset();
 
-    _descriptor_transmit.first(true);
     
     _descriptor_transmit.pointer(0, &_buffer_transmit[0][0]);
     _descriptor_transmit.pointer(1, &_buffer_transmit[1][0]);
@@ -67,6 +73,7 @@ void Emac::_init_descriptor_transmit()
     _descriptor_transmit.enable_crc(true);
     _descriptor_transmit.enable_padding(true);
 
+    _descriptor_transmit.first(true); // musi byc przy tx
     _descriptor_transmit.last(true);
     _descriptor_transmit.ring_end(true);
 }
@@ -81,6 +88,8 @@ void Emac::_init_descriptor_receive()
     _descriptor_receive.pointer(0, &_buffer_receive[0][0]);
     _descriptor_receive.pointer(1, &_buffer_receive[1][0]);
 
+    _descriptor_receive.first(true); // nie musi byc przy rx
+    _descriptor_receive.last(true);
     _descriptor_receive.ring_end(true);
 
     _descriptor_receive.own(true);
