@@ -1,16 +1,12 @@
 #include "emac_interrupt_mask.h"
+#include "emac_register.h"
 
-Emac_interrupt_mask::Emac_interrupt_mask(unsigned int base) : Emac_register(base)
+namespace emac::interrupt::mask
 {
 
+void rgmii_link_changed_enable(bool value)
+{
+    _set(base, value, 0, 1);
 }
 
-void Emac_interrupt_mask::rgmii(bool value)
-{
-    set(value, 0, 1);
-}
-
-bool Emac_interrupt_mask::rgmii()
-{
-    return get(0, 1);
-}
+}; /* namespace: emac::interrupt::mask */

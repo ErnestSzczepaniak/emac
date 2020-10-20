@@ -1,19 +1,24 @@
-#ifndef _emac_descriptor_receive_h
-#define _emac_descriptor_receive_h
+#ifndef _emac_dma_descriptor_receive_h
+#define _emac_dma_descriptor_receive_h
 
 /**
- * @file	emac_descriptor_receive.h
+ * @file	emac_dma_descriptor_receive.h
  * @author	en2
- * @date	27-06-2020
+ * @date	07-10-2020
  * @brief	
  * @details	
 **/
 
-#include "emac_descriptor.h"
+#include "emac_dma.h"
 
-class Emac_descriptor_receive : public Emac_descriptor
+namespace emac::dma::descriptor
+{
+
+class Receive : public Descriptor
 {
 public:
+    Receive();
+
     bool is_error_destination_address_filter();
 
     int length();
@@ -42,6 +47,8 @@ public:
     bool is_error_crc();
     bool is_available_extended_status();
 
-}; /* class: Emac_descriptor_receive */
+}; /* class: Receive */
 
-#endif /* define: emac_descriptor_receive_h */
+}; /* namespace: emac::dma::descriptor */
+
+#endif /* define: emac_dma_descriptor_receive_h */

@@ -4,91 +4,37 @@
 /**
  * @file	emac_dma_operation.h
  * @author	en2
- * @date	28-06-2020
+ * @date	07-10-2020
  * @brief	
  * @details	
 **/
 
-#include "emac_register.h"
-
-class Emac_dma_operation : public Emac_register
+namespace emac::dma::operation
 {
-public:
-    enum class Receive_threshold : unsigned char
-    {
-        _64,
-        _32,
-        _96,
-        _128
-    }; /* enum: Threshold */
 
-    enum class Transmit_threshold : unsigned char
-    {
-        _64,
-        _128,
-        _192,
-        _256,
-        _40,
-        _32,
-        _24,
-        _16
-    }; /* enum: Transmit_threshold */    
+static constexpr auto base = 0xff703018;
 
-    enum class Flow_control : unsigned char 
-    {
-        _1KB,
-        _2KB,
-        _3KB,
-        _4KB
-    }; /* enum: Flow_control */
+enum class Receive_threshold { _64, _32, _96, _128 };
+enum class Transmit_threshold { _64, _128, _192, _256, _40, _32, _24, _16 };
+enum class Flow_control { _1KB, _2KB, _3KB, _4KB };
 
-    Emac_dma_operation(unsigned int base);
+void receive_operation_enable(bool value);
+void receive_parallel_enable(bool value);
+void receive_threshold_set(Receive_threshold value);
+void pass_undersized_frames(bool value);
+void pass_error_frames(bool value);
+void receive_flow_control_enable(bool value);
+void receive_flow_control_activation_threshold_set(Flow_control value);
+void receive_flow_control_deactivation_threshold_set(Flow_control value);
+void transmit_operation_enable(bool value);
+void transmit_threshold_set(Transmit_threshold value);
+void transmit_flush(bool value);
+void transmit_when_full_enable(bool value);
+void receive_flush_disable(bool value);
+void receive_complete_frame_only_enable(bool value);
+void drop_crc_error_frames_disable(bool value);
 
-    void receive(bool value);
-    bool receive();
+}; /* namespace: emac::dma::operation */
 
-    void receive_parallel(bool value);
-    bool receive_parallel(); 
-
-    void receive_threshold(Receive_threshold value);
-    Receive_threshold receive_threshold();
-
-    void pass_undersized_frames(bool value);
-    bool pass_undersized_frames();
-
-    void pass_error_frames(bool value);
-    bool pass_error_frames();
-
-    void receive_flow_control(bool value);
-    bool receive_flow_control();
-
-    void receive_flow_control_activation(Flow_control value);
-    Flow_control receive_flow_control_activation();
-
-    void receive_flow_control_deactivation(Flow_control value);
-    Flow_control receive_flow_control_deactivation();
-
-    void transmit(bool value);
-    bool transmit();
-
-    void transmit_threshold(Transmit_threshold value);
-    Transmit_threshold transmit_threshold();
-
-    void transmit_flush(bool value);
-    bool transmit_flush();
-
-    void transmit_when_full(bool value);
-    bool transmit_when_full();
-
-    void receive_flush_disable(bool value);
-    bool receive_flush_disable();    
-
-    void receive_complete(bool value);
-    bool receive_complete();
-
-    void drop_crc_error_frames(bool value);
-    bool drop_crc_error_frames();
-
-}; /* class: Emac_dma_operation */
 
 #endif /* define: emac_dma_operation_h */

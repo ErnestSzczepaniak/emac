@@ -1,157 +1,84 @@
 #include "emac_dma_operation.h"
+#include "emac_register.h"
 
-Emac_dma_operation::Emac_dma_operation(unsigned int base) : Emac_register(base)
+namespace emac::dma::operation
 {
 
+void receive_operation_enable(bool value)
+{
+    _set(base, value, 1, 1);
 }
 
-void Emac_dma_operation::receive(bool value)
+void receive_parallel_enable(bool value)
 {
-    set(value, 1, 1);
+    _set(base, value, 2, 1);
 }
 
-bool Emac_dma_operation::receive()
+void receive_threshold_set(Receive_threshold value)
 {
-    return get(1, 1);
+    _set(base, value, 3, 2);
 }
 
-void Emac_dma_operation::receive_parallel(bool value)
+void pass_undersized_frames(bool value)
 {
-    set(value, 2, 1);
+    _set(base, value, 6, 1);
 }
 
-bool Emac_dma_operation::receive_parallel()
+void pass_error_frames(bool value)
 {
-    return get(2, 1);
+    _set(base, value, 7, 1);
 }
 
-void Emac_dma_operation::receive_threshold(Receive_threshold value)
+void receive_flow_control_enable(bool value)
 {
-    set(value, 3, 2);
+    _set(base, value, 8, 1);
 }
 
-Emac_dma_operation::Receive_threshold Emac_dma_operation::receive_threshold()
+void receive_flow_control_activation_threshold_set(Flow_control value)
 {
-    return get<Receive_threshold>(3, 2);
+    _set(base, value, 9, 2);
 }
 
-void Emac_dma_operation::pass_undersized_frames(bool value)
+void receive_flow_control_deactivation_threshold_set(Flow_control value)
 {
-    set(value, 6, 1);
+    _set(base, value, 11, 2);
 }
 
-bool Emac_dma_operation::pass_undersized_frames()
+void transmit_operation_enable(bool value)
 {
-    return get(6, 1);
+    _set(base, value, 13, 1);
 }
 
-void Emac_dma_operation::pass_error_frames(bool value)
+void transmit_threshold_set(Transmit_threshold value)
 {
-    set(value, 7, 1);
+    _set(base, value, 14, 3);
 }
 
-bool Emac_dma_operation::pass_error_frames()
+void transmit_flush(bool value)
 {
-    return get(7, 1);
+    _set(base, value, 20, 1);
 }
 
-void Emac_dma_operation::receive_flow_control(bool value)
+void transmit_when_full_enable(bool value)
 {
-    set(value, 8, 1);
+    _set(base, value, 21, 1);
 }
 
-bool Emac_dma_operation::receive_flow_control()
+void receive_flush_disable(bool value)
 {
-    return get(8, 1);
+    _set(base, value, 24, 1);
 }
 
-void Emac_dma_operation::receive_flow_control_activation(Flow_control value)
+void receive_complete_frame_only_enable(bool value)
 {
-    set(value, 9, 2);
+    _set(base, value, 25, 1);
 }
 
-Emac_dma_operation::Flow_control Emac_dma_operation::receive_flow_control_activation()
+void drop_crc_error_frames_disable(bool value)
 {
-    return get<Flow_control>(9, 2);
+    _set(base, value, 26, 1);
 }
 
-void Emac_dma_operation::receive_flow_control_deactivation(Flow_control value)
-{
-    set(value, 11, 2);
-}
 
-Emac_dma_operation::Flow_control Emac_dma_operation::receive_flow_control_deactivation()
-{
-    return get<Flow_control>(11, 2);
-}
-
-void Emac_dma_operation::transmit(bool value)
-{
-    set(value, 13, 1);
-}
-
-bool Emac_dma_operation::transmit()
-{
-    return get(13, 1);
-}
-
-void Emac_dma_operation::transmit_threshold(Transmit_threshold value)
-{
-    set(value, 14, 3);
-}
-
-Emac_dma_operation::Transmit_threshold Emac_dma_operation::transmit_threshold()
-{
-    return get<Transmit_threshold>(14, 3);
-}
-
-void Emac_dma_operation::transmit_flush(bool value)
-{
-    set(value, 20, 1);
-}
-
-bool Emac_dma_operation::transmit_flush()
-{
-    return get(20, 1);
-}
-
-void Emac_dma_operation::transmit_when_full(bool value)
-{
-    set(value, 21, 1);
-}
-
-bool Emac_dma_operation::transmit_when_full()
-{
-    return get(21, 1);
-}
-
-void Emac_dma_operation::receive_flush_disable(bool value)
-{
-    set(value, 24, 1);
-}
-
-bool Emac_dma_operation::receive_flush_disable()
-{
-    return get(24, 1);
-}
-
-void Emac_dma_operation::receive_complete(bool value)
-{
-    set(value, 25, 1);
-}
-
-bool Emac_dma_operation::receive_complete()
-{
-    return get(25, 1);
-}
-
-void Emac_dma_operation::drop_crc_error_frames(bool value)
-{
-    set(value, 26, 1);
-}
-
-bool Emac_dma_operation::drop_crc_error_frames()
-{
-    return get(26, 1);
-}
+}; /* namespace: emac::dma::operation */
 

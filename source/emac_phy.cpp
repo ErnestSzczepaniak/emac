@@ -1,65 +1,58 @@
 #include "emac_phy.h"
+#include "emac_register.h"
 
-Emac_phy::Emac_phy(unsigned int base) : Emac_register(base, 2)
+namespace emac::phy
 {
-    
+
+void device_set(int value)
+{
+    auto temp = _get<unsigned short int>(base, 0, 16, index_control);
+
+    temp &= ~0xf8;
+    temp |= value << 11;
+
+    _set(base, temp, 0, 16, index_control);
 }
 
-void Emac_phy::device(int value)
+void speed_set(Speed value)
 {
-    _device = value;
+    auto temp = _get<unsigned short int>(base, 0, 16, index_control);
+
+    temp &= ~0x3c;
+    temp |= ((int) value) << 2;
+
+    _set(base, temp, 0, 16, index_control);
 }
 
-int Emac_phy::device()
+unsigned short int read(int address)
 {
-    return _device;
-}
-
-void Emac_phy::speed(Speed value)
-{
-    _speed = value;
-}
-
-Emac_phy::Speed Emac_phy::speed()
-{
-    return _speed;
-}
-
-unsigned short int Emac_phy::read(int address)
-{
-    auto temp = get(0, 16, 0);
+    auto temp = _get<unsigned short int>(base, 0, 16, index_control);
 
     temp |= 0x1; // busy
     temp &= ~0x2; // read
-    temp &= ~0x3c;
-    temp |= ((int) _speed) << 2;
     temp &= ~0x7c0;
     temp |= (address << 6);
-    temp &= ~0xf8;
-    temp |= _device << 11;
 
-    set(temp, 0, 16, 0);
+    _set(base, temp, 0, 16, index_control);
 
-    while(get(0, 1, 0) == true);
+    while(_get<bool>(base, 0, 1, index_control) == true);
 
-    return get(0, 16, 1);
+    return _get<unsigned short int>(base, 0, 16, index_data);
 }
 
-void Emac_phy::write(int address, unsigned short int value)
+void write(int address, unsigned short int value)
 {
-    auto temp = get(0, 16, 0);
+    auto temp = _get<unsigned short int>(base, 0, 16, index_control);
 
     temp |= 0x1; // busy
     temp |= 0x2; // write
-    temp &= ~0x3c;
-    temp |= ((int) _speed) << 2;
     temp &= ~0x7c0;
     temp |= (address << 6);
-    temp &= ~0xf8;
-    temp |= _device << 11;
 
-    set(value, 0, 16, 1);
-    set(temp, 0, 16, 0);
+    _set(base, value, 0, 16, index_data);
+    _set(base, temp, 0, 16, index_control);
 
-    while(get(0, 1, 0) == true);
+    while(_get<bool>(base, 0, 1, 0) == true);
 }
+
+}; /* namespace: emac::phy */

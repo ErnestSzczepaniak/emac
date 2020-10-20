@@ -1,126 +1,127 @@
 #include "emac_dma_status.h"
+#include "emac_register.h"
 
-Emac_dma_status::Emac_dma_status(unsigned int base) : Emac_register(base)
+namespace emac::dma::status
 {
 
+bool transmission_complete()
+{
+    return _get<bool>(base, 0, 1);
 }
 
-bool Emac_dma_status::transmission_complete()
+bool transmission_stopped()
 {
-    return get(0, 1);
+    return _get<bool>(base, 1, 1);
 }
 
-bool Emac_dma_status::transmission_stopped()
+bool next_descriptor_transmit_owned_by_host()
 {
-    return get(1, 1);
+    return _get<bool>(base, 2, 1);
 }
 
-bool Emac_dma_status::next_descriptor_transmit_owned_by_host()
+bool jabber_timer_expired()
 {
-    return get(2, 1);
+    return _get<bool>(base, 3, 1);
 }
 
-bool Emac_dma_status::jabber_timer_expired()
+bool buffer_overflow()
 {
-    return get(3, 1);
+    return _get<bool>(base, 4, 1);
 }
 
-bool Emac_dma_status::buffer_overflow()
+bool buffer_underflow()
 {
-    return get(4, 1);
+    return _get<bool>(base, 5, 1);
 }
 
-bool Emac_dma_status::buffer_underflow()
+bool reception_complete()
 {
-    return get(5, 1);
+    return _get<bool>(base, 6, 1);
 }
 
-bool Emac_dma_status::reception_complete()
+bool next_descriptor_receive_owned_by_host()
 {
-    return get(6, 1);
+    return _get<bool>(base, 7, 1);
 }
 
-bool Emac_dma_status::next_descriptor_receive_owned_by_host()
+bool state_stopped()
 {
-    return get(7, 1);
+    return _get<bool>(base, 8, 1);
 }
 
-bool Emac_dma_status::state_stopped()
+bool jumbo_received()
 {
-    return get(8, 1);
+    return _get<bool>(base, 9, 1);
 }
 
-bool Emac_dma_status::jumbo_received()
+bool fifo_transfered()
 {
-    return get(9, 1);
+    return _get<bool>(base, 10, 1);
 }
 
-bool Emac_dma_status::fifo_transfered()
+bool error_bus()
 {
-    return get(10, 1);
+    return _get<bool>(base, 13, 1);
 }
 
-bool Emac_dma_status::error_bus()
+bool packed_filled()
 {
-    return get(13, 1);
+    return _get<bool>(base, 14, 1);
 }
 
-bool Emac_dma_status::packed_filled()
+void abnormal_interrupt_summary_set(bool value)
 {
-    return get(14, 1);
+    _set(base, value, 15, 1);
 }
 
-void Emac_dma_status::abnormal_interrupt_summary(bool value)
+bool abnormal_interrupt_summary_get()
 {
-    set(value, 15, 1);
+    return _get<bool>(base, 15, 1);
 }
 
-bool Emac_dma_status::abnormal_interrupt_summary()
+void normal_interrupt_summary_set(bool value)
 {
-    return get(15, 1);
+    _set(base, value, 16, 1);
 }
 
-void Emac_dma_status::normal_interrupt_summary(bool value)
+bool normal_interrupt_summary_get()
 {
-    set(value, 16, 1);
+    return _get<bool>(base, 16, 1);
 }
 
-bool Emac_dma_status::normal_interrupt_summary()
+State_receive state_receive_get()
 {
-    return get(16, 1);
+    return _get<State_receive>(base, 17, 2);
 }
 
-Emac_dma_status::State_receive Emac_dma_status::state_receive()
+State_transmit state_transmi_get()
 {
-    return get<State_receive>(17, 2);
+    return _get<State_transmit>(base, 20, 2);
 }
 
-Emac_dma_status::State_transmit Emac_dma_status::state_transmi()
+bool error_bus_type()
 {
-    return get<State_transmit>(20, 2);
+    return _get<bool>(base, 23, 3);
 }
 
-bool Emac_dma_status::error_bus_type()
+bool interrupt_gmac_line_get()
 {
-    return get(23, 3);
+    return _get<bool>(base, 26, 1);
 }
 
-bool Emac_dma_status::interrupt_gmac_line()
+bool interrupt_gmac_mmc_get()
 {
-    return get(26, 1);
+    return _get<bool>(base, 27, 1);
 }
 
-bool Emac_dma_status::interrupt_gmac_mmc()
+bool interrupt_timestamp_get()
 {
-    return get(27, 1);
+    return _get<bool>(base, 29, 1);
 }
 
-bool Emac_dma_status::interrupt_timestamp()
+bool interrupt_gmac_lpi_get()
 {
-    return get(29, 1);
+    return _get<bool>(base, 30, 1);
 }
 
-bool Emac_dma_status::interrupt_gmac_lpi()
-{
-    return get(30, 1);
-}
+}; /* namespace: emac::dma::status */

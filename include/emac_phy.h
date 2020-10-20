@@ -4,49 +4,26 @@
 /**
  * @file	emac_phy.h
  * @author	en2
- * @date	23-06-2020
+ * @date	06-10-2020
  * @brief	
  * @details	
 **/
 
-#include "emac_register.h"
-
-class Emac_phy : public Emac_register
+namespace emac::phy
 {
-public:
-    enum class Speed : unsigned char
-    {
-        L4_60_100_MDC_L4_42,
-        L4_100_150_MDC_L4_62,
-        L4_25_35_MDC_L4_16,
-        L4_35_60_MDC_L4_26,
-        L4_150_250_MDC_L4_102,
-        L4_250_300_MDC_L4_124,
-        L4_4,
-        L4_6,
-        L4_8,
-        L4_10,
-        L4_12,
-        L4_14,
-        L4_16,
-        L4_18
-    }; /* enum: Speed */
 
-    Emac_phy(unsigned int base);
+static constexpr auto base = 0xff702010;
+static constexpr auto index_control = 0;
+static constexpr auto index_data = 1;
 
-    void device(int value);
-    int device();
- 
-    void speed(Speed value);
-    Speed speed();
+enum class Speed { L4_60_100_MDC_L4_42, L4_100_150_MDC_L4_62, L4_25_35_MDC_L4_16, L4_35_60_MDC_L4_26, L4_150_250_MDC_L4_102, L4_250_300_MDC_L4_124, L4_4, L4_6, L4_8, L4_10, L4_12, L4_14, L4_16, L4_18 };
 
-    unsigned short int read(int address);
-    void write(int address, unsigned short int value);
+void device_set(int value);
+void speed_set(Speed value);
+unsigned short int read(int address);
+void write(int address, unsigned short int value);
 
-private:
-    Speed _speed;
-    int _device;
+}; /* namespace: emac::phy */
 
-}; /* class: Emac_phy */
 
 #endif /* define: emac_phy_h */

@@ -4,36 +4,35 @@
 /**
  * @file	emac_dma.h
  * @author	en2
- * @date	28-06-2020
+ * @date	07-10-2020
  * @brief	
  * @details	
 **/
 
-#include "emac_register.h"
-#include "emac_dma_bus.h"
-#include "emac_dma_status.h"
-#include "emac_dma_operation.h"
-#include "emac_dma_interrupt.h"
+namespace emac::dma
+{
 
-class Emac_dma
+class Descriptor
 {
 public:
-    Emac_dma(unsigned int base);
+    Descriptor();
 
-    Emac_dma_bus bus;
+    void own(bool value);
+    bool own();   
 
-    Emac_register poll_transmit;
-    Emac_register poll_receive;
+    bool error_summary();
 
-    Emac_register address_descriptor_list_receive;
-    Emac_register address_descriptor_list_transmit;
+    void size(int index, int value);
+    int size(int index);
 
-    Emac_dma_status status;
-    Emac_dma_operation operation;
-    Emac_dma_interrupt interrupt;
+    void pointer(int index, void * pointer);
+    void * pointer(int index);
 
+protected:
+    unsigned int _descriptor[4];
 
-}; /* class: Emac_dma */
+}; /* class: Descriptor */
 
+}; /* namespace: emac::dma */
 
 #endif /* define: emac_dma_h */

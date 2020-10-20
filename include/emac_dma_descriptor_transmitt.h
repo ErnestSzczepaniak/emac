@@ -1,19 +1,20 @@
-#ifndef _emac_descriptor_transmit_h
-#define _emac_descriptor_transmit_h
+#ifndef _emac_dma_descriptor_transmitt_h
+#define _emac_dma_descriptor_transmitt_h
 
 /**
- * @file	emac_descriptor_transmit.h
+ * @file	emac_dma_descriptor_transmitt.h
  * @author	en2
- * @date	27-06-2020
+ * @date	07-10-2020
  * @brief	
  * @details	
 **/
 
-#include "emac_descriptor.h"
+#include "emac_dma.h"
 
-// tx buffer size = 8192 per pointer
+namespace emac::dma::descriptor
+{
 
-class Emac_descriptor_transmit : public Emac_descriptor
+class Transmitt : public Descriptor
 {
 public:
     enum class Crc_offload : unsigned char 
@@ -67,4 +68,7 @@ public:
     
 }; /* class: Descriptor_tx */
 
-#endif /* define: emac_descriptor_transmit_h */
+}; /* namespace: emac::dma::descriptor */
+
+
+#endif /* define: emac_dma_descriptor_transmitt_h */

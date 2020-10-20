@@ -4,65 +4,33 @@
 /**
  * @file	emac_dma_interrupt.h
  * @author	en2
- * @date	29-06-2020
+ * @date	06-10-2020
  * @brief	
  * @details	
 **/
 
-#include "emac_register.h"
-
-class Emac_dma_interrupt : public Emac_register
+namespace emac::dma::interrupt
 {
-public:
-    Emac_dma_interrupt(unsigned int base);
-    
-    void transmit(bool value);
-    bool transmit();
 
-    void transmit_stopped(bool value);
-    bool transmit_stopped();
+static constexpr auto base = 0xff70301c;
 
-    void transmit_buffer_unavailable(bool value);
-    bool transmit_buffer_unavailable();
-    
-    void transmit_jabber_timeout(bool value);
-    bool transmit_jabber_timeout();
+void transmit_enable(bool value);
+void transmit_stopped_enable(bool value);
+void transmit_buffer_unavailable_enable(bool value);
+void transmit_jabber_timeout_enable(bool value);
+void transmit_overflow_enable(bool value);
+void transmit_underflow_enable(bool value);
+void receive_enable(bool value);
+void receive_buffer_unavailable_enable(bool value);
+void receive_stopped_enable(bool value);
+void receive_watchdog_enable(bool value);
+void transmit_early_enable(bool value);
+void error_bus_enable(bool value);
+void receive_early_enable(bool value);
+void abnormal_enable(bool value);
+void normal_enable(bool value);
 
-    void transmit_overflow(bool value);
-    bool transmit_overflow();
-
-    void transmit_underflow(bool value);
-    bool transmit_underflow();
-
-    void receive(bool value);
-    bool receive();
-
-    void receive_buffer_unavailable(bool value);
-    bool receive_buffer_unavailable();
-
-    void receive_stopped(bool value);
-    bool receive_stopped();
-
-    void receive_watchdog(bool value);
-    bool receive_watchdog();
-
-    void transmit_early(bool value);
-    bool transmit_early();
-
-    void error_bus(bool value);
-    bool error_bus();
-
-    void receive_early(bool value);
-    bool receive_early();
-
-    void abnormal(bool value);
-    bool abnormal();
-
-    void normal(bool value);
-    bool normal();
-
-
-}; /* class: Emac_dma_interrupt */
+}; /* namespace: emac::dma::interrupt */
 
 
 #endif /* define: emac_dma_interrupt_h */

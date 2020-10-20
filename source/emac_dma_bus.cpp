@@ -1,96 +1,42 @@
 #include "emac_dma_bus.h"
+#include "emac_register.h"
 
-Emac_dma_bus::Emac_dma_bus(unsigned int base) : Emac_register(base)
+namespace emac::dma::bus
 {
 
-}
-
-void Emac_dma_bus::reset(bool value)
+void reset(bool value)
 {
-    set(value, 0, 1);
+    _set(base, value, 0, 1);
 }
 
-bool Emac_dma_bus::reset()
+void descriptor_skip_words_set(int value)
 {
-    return get(0, 1);
+    _set(base, value, 2, 5);
 }
 
-void Emac_dma_bus::descriptor_skip_words(int value)
+void descriptor_size_set(Descriptor_size value)
 {
-    set(value, 2, 5);
+    _set(base, value, 7, 1);
 }
 
-int Emac_dma_bus::descriptor_skip_words()
+void beats_per_transaction_set(Beats value)
 {
-    return get(2, 5);
+    _set(base, value, 8, 6);
 }
 
-void Emac_dma_bus::descriptor(Descriptor value)
+void burst_type_set(Burst_type value)
 {
-    set(value, 7, 1);
+    _set(base, value, 16, 1);
 }
 
-Emac_dma_bus::Descriptor Emac_dma_bus::descriptor()
+void beats_per_transaction_multiply_by_eight(bool value)
 {
-    return get<Descriptor>(7, 1);
+    _set(base, value, 24, 1);
 }
 
-void Emac_dma_bus::beats_transmit(Beats value)
+void beats_alignment_enable(bool value)
 {
-    set(value, 8, 6);
+    _set(base, value, 25, 1);
 }
 
-Emac_dma_bus::Beats Emac_dma_bus::beats_transmit()
-{
-    return get<Beats>(8, 6);
-}
-
-void Emac_dma_bus::burst(Burst value)
-{
-    set(value, 16, 1);
-}
-
-Emac_dma_bus::Burst Emac_dma_bus::burst()
-{
-    return get<Burst>(16, 1);
-}
-
-void Emac_dma_bus::beats_receive(Beats value)
-{       
-    set(value, 17, 6);
-}
-
-Emac_dma_bus::Beats Emac_dma_bus::beats_receive()
-{
-    return get<Beats>(17, 6);
-}
-
-void Emac_dma_bus::beats_same_as_transmit(bool value)
-{
-    set(!value, 23, 1);
-}
-
-bool Emac_dma_bus::beats_same_as_transmit()
-{
-    return !get(23, 1);
-}
-
-void Emac_dma_bus::beats_multiply_by_eight(bool value)
-{
-    set(value, 24, 1);
-}
-
-bool Emac_dma_bus::beats_multiply_by_eight()
-{
-    return get(24, 1);
-}
-
-void Emac_dma_bus::beats_aligned(bool value)
-{
-    set(value, 25, 1);
-}
-
-bool Emac_dma_bus::beats_aligned()
-{
-    return get(25, 1);
-}
+}; /* namespace: emac::dma::bus */

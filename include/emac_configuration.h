@@ -4,124 +4,44 @@
 /**
  * @file	emac_configuration.h
  * @author	en2
- * @date	27-06-2020
+ * @date	06-10-2020
  * @brief	
  * @details	
 **/
 
-#include "emac_register.h"
-
-class Emac_configuration : public Emac_register
+namespace emac::configuration
 {
-public:
-    enum class Preamble : unsigned char 
-    {
-        SEVEN = 0,
-        FIVE,
-        THREE
-    }; /* enum: Preamble */
 
-    enum class Back_off_limit : unsigned char
-    {
-        _10,
-        _8,
-        _4,
-        _1
-    }; /* enum: Back_off_limit */
+static constexpr auto base = 0xff702000;
 
-    enum class Duplex : unsigned char
-    {
-        HALF,
-        FULL
-    }; /* enum: Duplex */
+enum class Preamble { _7, _5, _3 };
+enum class Back_off_limit { _10, _8, _4, _1 }; 
+enum class Speed { _10_BASE_T, _100_BASE_T, _1000_BASE_T }; 
+enum class Interframe_gap { _96, _88, _80, _72, _64, _56, _48, _40 };
 
-    enum class Speed : unsigned char
-    {
-        _10_BASE_T,
-        _100_BASE_T,
-        _1000_BASE_T
-    }; /* enum: Speed */
+void preamble_length_set(Preamble value);
+void receive_state_machine_enable(bool value);
+void transmit_state_machine_enable(bool value);
+void defferal_check_enable(bool value);
+void back_off_limit_set(Back_off_limit value);
+void strip_pad_crc_enable(bool value);
+bool link_get();
+void half_duplex_one_transmission_enable(bool value);
+void crc_check_enable(bool value);
+void full_duplex_enable(bool value);
+void loopback_enable(bool value);
+void half_duplex_reception_disable(bool value);
+void speed_set(Speed value);
+void half_duplex_crs_disable(bool value);
+void interframe_gap_set(Interframe_gap value);
+void jumbo_frame_error_disable(bool value);
+void half_duplex_bursting_enable(bool value);
+void transmitter_jabber_timer_disable(bool value);
+void receiver_watchdog_disable(bool value);
+void phy_forwarding_enable(bool value);
+void strip_crc_ethertype_enable(bool value);
+void giant_frame_enable(bool value);
 
-    enum class Interframe_gap : unsigned char
-    {
-        _96,
-        _88,
-        _80,
-        _72,
-        _64,
-        _56,
-        _48,
-        _40
-    }; /* enum: Interframe_gap */
-
-    Emac_configuration(unsigned int base);
-
-    void preamble(Preamble value);
-    Preamble preamble();
-
-    void receive_machine(bool value);
-    bool receive_machine();
-
-    void transmit_machine(bool value);
-    bool transmit_machine();
-
-    void defferal_check(bool value);
-    bool defferal_check();
-
-    void back_off_limit(Back_off_limit value);
-    Back_off_limit back_off_limit();
-
-    void strip_pad_crc_all(bool value);
-    bool strip_pad_crc_all();
-
-    void link(bool value);
-    bool link();
-
-    void half_duplex_retransmission(bool value);
-    bool half_duplex_retransmission();
-
-    void crc_check(bool value);
-    bool crc_check();
-
-    void duplex(Duplex value);
-    Duplex duplex();
-
-    void loopback(bool value);
-    bool loopback();
-
-    void half_duplex_reception(bool value);
-    bool half_duplex_reception();
-
-    void speed(Speed value);
-    Speed speed();
-
-    void half_duplex_ignore_crs(bool value);
-    bool half_duplex_ignore_crs();
-
-    void interframe_gap(Interframe_gap value);
-    Interframe_gap interframe_gap();
-
-    void jumbo_enable(bool value);
-    bool jumbo_enable();
-
-    void half_duplex_bursting(bool value);
-    bool half_duplex_bursting();
-
-    void transmitter_jabber(bool value);
-    bool transmitter_jabber();
-
-    void receiver_watchdog(bool value);
-    bool receiver_watchdog();
-
-    void phy_forwarding(bool value);
-    bool phy_forwarding();
-
-    void strip_crc_ethertype(bool value);
-    bool strip_crc_ethertype();
-
-    void giant_enable(bool value);
-    bool giant_enable();
-
-}; /* class: Emac_configuration */
+}; /* namespace: emac::configuration */
 
 #endif /* define: emac_configuration_h */

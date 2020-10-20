@@ -4,23 +4,19 @@
 /**
  * @file	emac_interrupt_mask.h
  * @author	en2
- * @date	30-06-2020
+ * @date	06-10-2020
  * @brief	
  * @details	
 **/
 
-#include "emac_register.h"
-
-class Emac_interrupt_mask : public Emac_register
+namespace emac::interrupt::mask
 {
-public:
-    Emac_interrupt_mask(unsigned int base);
 
-    void rgmii(bool value);
-    bool rgmii();
+static constexpr auto base = 0xff70203c;
 
+void rgmii_link_changed_enable(bool value);
 
-}; /* class: Emac_interrupt_mask */
+}; /* namespace: emac::interrupt::mask */
 
 
 #endif /* define: emac_interrupt_mask_h */

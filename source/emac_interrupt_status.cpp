@@ -1,11 +1,12 @@
 #include "emac_interrupt_status.h"
+#include "emac_register.h"
 
-Emac_interrupt_status::Emac_interrupt_status(unsigned int base) : Emac_register(base)
+namespace emac::interrupt::status
 {
 
+bool rgmii_link_changed_get()
+{
+    return _get<bool>(base, 0, 1);
 }
 
-bool Emac_interrupt_status::rgmii()
-{
-    return get(0, 1);
-}
+}; /* namespace: emac::interrupt::status */

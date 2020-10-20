@@ -1,96 +1,92 @@
 #include "emac.h"
+#include "emac_register.h"
 
-Emac::Emac(unsigned int base)
-:
-configuration(base + 0x0),
-filter(base + 0x4),
-phy(base + 0x10),
-interrupt_status(base + 0x38),
-interrupt_mask(base + 0x3c),
-dma(base + 0x1000)
+namespace emac
 {
 
-}
+dma::descriptor::Transmitt _descriptor_tx;
+dma::descriptor::Receive _descriptor_rx;
+unsigned char _buffer[2048];
 
-void Emac::init()
+void init()
 {
-    Emac_register manager_control(address_manager_control);
-    Emac_register permodrst(address_permodrst);
+    _set(base_permodrst, true, 1, 1); // set emac to reset
+    _set(base_manager_control, 0x1, 2, 2); // switch to rgmii
+    _set(base_permodrst, false, 1, 1); // set emac out of reset
 
-    permodrst.set(true, 1, 1); // emac into reset
+    ksz9021::init();
 
-    manager_control.set(0x1, 2, 2); // physel to RGMII
+    ksz9021::reset();
 
-    permodrst.set(false, 1, 1); // emac out of reset
+    ksz9021::link_wait();
 
-    _init_descriptor_transmit();
-    _init_descriptor_receive();
+    auto [speed, duplex] = ksz9021::link_params();
 
-    // pobranie speed z ksz
+    if (duplex == ksz9021::Duplex::FULL) configuration::full_duplex_enable(true);
+    if (speed == ksz9021::Speed::_1000_BASE_T) configuration::speed_set(configuration::Speed::_1000_BASE_T);
 
-    configuration.crc_check(true);
-    configuration.duplex(Emac_configuration::Duplex::FULL);
-    configuration.speed(Emac_configuration::Speed::_1000_BASE_T);
-    configuration.transmit_machine(true);
-    configuration.receive_machine(true);
+    configuration::crc_check_enable(true);
+    configuration::transmit_state_machine_enable(true);
+    configuration::receive_state_machine_enable(true);
 
-    interrupt_mask.rgmii(true);
+    interrupt::mask::rgmii_link_changed_enable(true);
 
-    dma.address_descriptor_list_transmit.set(_descriptor_transmit.address());
-    dma.address_descriptor_list_receive.set(_descriptor_receive.address());
+    /* ---------------------------------------------| dma |--------------------------------------------- */
 
-    dma.interrupt.normal(true);
-    dma.interrupt.receive(true);
+    _descriptor_tx.enable_crc(true);
+    _descriptor_tx.enable_padding(true);
+    _descriptor_tx.first(true); // musi byc przy tx
+    _descriptor_tx.last(true);
+    _descriptor_tx.ring_end(true);
 
-    dma.operation.transmit_when_full(true);
-    dma.operation.transmit(true);
-    dma.operation.receive(true);
+    dma::descriptor::address::transmit_set(&_descriptor_tx);
+
+    _descriptor_rx.size(0, 2048);
+    _descriptor_rx.pointer(0, _buffer);
+    _descriptor_rx.first(true); // nie musi byc przy rx
+    _descriptor_rx.last(true);
+    _descriptor_rx.ring_end(true);
+    _descriptor_rx.own(true);
+
+    dma::descriptor::address::receive_set(&_descriptor_rx);
+
+    dma::operation::transmit_when_full_enable(true);
+
+    dma::interrupt::normal_enable(true);
+    dma::interrupt::receive_enable(true);
+
+    dma::operation::transmit_operation_enable(true);
+    dma::operation::receive_operation_enable(true);
 }
 
-unsigned char * Emac::buffer_transmit(int index)
+void send(void * data, int size)
 {
-    return &_buffer_transmit[index][0];
+    _descriptor_tx.pointer(0, data);
+    _descriptor_tx.size(0, size);
+    // _descriptor_tx.enable_padding(false); // test
+
+    _descriptor_tx.own(true);
+
+    dma::poll::transmitt();
+
+    while(_descriptor_tx.own() == true);
 }
 
-void Emac::send(int index, int size)
+void interrupt_ack()
 {
-    _descriptor_transmit.size(index, size);
-    _descriptor_transmit.own(true);
-
-    dma.poll_transmit.set(1);
+    dma::status::normal_interrupt_summary_set(true);
 }
 
-/* ---------------------------------------------| info |--------------------------------------------- */
-
-void Emac::_init_descriptor_transmit()
+Result receive()
 {
-    _descriptor_transmit.reset();
-
-    
-    _descriptor_transmit.pointer(0, &_buffer_transmit[0][0]);
-    _descriptor_transmit.pointer(1, &_buffer_transmit[1][0]);
-
-    _descriptor_transmit.enable_crc(true);
-    _descriptor_transmit.enable_padding(true);
-
-    _descriptor_transmit.first(true); // musi byc przy tx
-    _descriptor_transmit.last(true);
-    _descriptor_transmit.ring_end(true);
+    return {_buffer, _descriptor_rx.length()};
 }
 
-void Emac::_init_descriptor_receive()
+void receive_ack()
 {
-    _descriptor_receive.reset();
+    _descriptor_rx.own(true);
 
-    _descriptor_receive.size(0, 4096);
-    _descriptor_receive.size(1, 4096);
-
-    _descriptor_receive.pointer(0, &_buffer_receive[0][0]);
-    _descriptor_receive.pointer(1, &_buffer_receive[1][0]);
-
-    _descriptor_receive.first(true); // nie musi byc przy rx
-    _descriptor_receive.last(true);
-    _descriptor_receive.ring_end(true);
-
-    _descriptor_receive.own(true);
+    dma::poll::receive();
 }
+
+}; /* namespace: emac */

@@ -4,67 +4,28 @@
 /**
  * @file	emac_dma_bus.h
  * @author	en2
- * @date	28-06-2020
+ * @date	06-10-2020
  * @brief	
  * @details	
 **/
 
-#include "emac_register.h"
-
-class Emac_dma_bus : public Emac_register
+namespace emac::dma::bus
 {
-public:
-    enum class Descriptor : unsigned char
-    {
-        NORMAL,
-        EXTENDED
-    }; /* enum: Descriptor */
 
-    enum class Beats : unsigned char
-    {
-        _1,
-        _2,
-        _4,
-        _8,
-        _16,
-        _32
-    }; /* enum: Beats */
+static constexpr auto base = 0xff703000;
 
-    enum class Burst : unsigned char
-    {
-        SINGLE_OR_INCREMENTAL,
-        FIXED
-    }; /* enum: Burst */
+enum class Descriptor_size { NORMAL, EXTENDED };
+enum class Beats { _1, _2, _4, _8, _16, _32 }; 
+enum class Burst_type { SINGLE_OR_INCREMENTAL, FIXED };
 
-    Emac_dma_bus(unsigned int base);
+void reset(bool value);
+void descriptor_skip_words_set(int value);
+void descriptor_size_set(Descriptor_size value);
+void beats_per_transaction_set(Beats value);
+void burst_type_set(Burst_type value);
+void beats_per_transaction_multiply_by_eight(bool value);
+void beats_alignment_enable(bool value);
 
-    void reset(bool value);
-    bool reset();
-
-    void descriptor_skip_words(int value);
-    int descriptor_skip_words();
-
-    void descriptor(Descriptor value);
-    Descriptor descriptor();
-
-    void beats_transmit(Beats value);
-    Beats beats_transmit();
-
-    void burst(Burst value);
-    Burst burst();
-
-    void beats_receive(Beats value);
-    Beats beats_receive();
-
-    void beats_same_as_transmit(bool value);
-    bool beats_same_as_transmit();
-
-    void beats_multiply_by_eight(bool value);
-    bool beats_multiply_by_eight();
-
-    void beats_aligned(bool value);
-    bool beats_aligned();
-
-}; /* class: Emac_dma_bus */
+}; /* namespace: emac::dma::bus */
 
 #endif /* define: emac_dma_bus_h */

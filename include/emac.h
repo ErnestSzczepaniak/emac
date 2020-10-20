@@ -4,54 +4,44 @@
 /**
  * @file	emac.h
  * @author	en2
- * @date	23-06-2020
+ * @date	06-10-2020
  * @brief	
  * @details	
 **/
 
 #include "emac_configuration.h"
-#include "emac_filter.h"
-#include "emac_phy.h"
-#include "emac_dma.h"
-#include "emac_descriptor_transmit.h"
-#include "emac_descriptor_receive.h"
 #include "emac_interrupt_mask.h"
 #include "emac_interrupt_status.h"
+#include "emac_phy.h"
+#include "emac_ksz9021.h"
+#include "emac_dma.h"
+#include "emac_dma_bus.h"
+#include "emac_dma_descriptor_address.h"
+#include "emac_dma_descriptor_transmitt.h"
+#include "emac_dma_descriptor_receive.h"
+#include "emac_dma_interrupt.h"
+#include "emac_dma_status.h"
+#include "emac_dma_operation.h"
+#include "emac_dma_poll.h"
 
-class Emac
+namespace emac
 {
-    static constexpr auto address_permodrst = 0xffd05014;
-    static constexpr auto address_manager_control = 0xffd08060;
 
-public:
-    Emac(unsigned int base);
+struct Result {void * data; int size;};
+extern unsigned char _buffer[2048];
+extern dma::descriptor::Transmitt _descriptor_tx;
+extern dma::descriptor::Receive _descriptor_rx;
 
-    void init();
+static constexpr auto base_permodrst = 0xffd05014;
+static constexpr auto base_manager_control = 0xffd08060;
 
-    unsigned char * buffer_transmit(int index = 0);
-    void send(int index = 0, int size = 8192);
+void init();
+void send(void * data, int size);
 
+void interrupt_ack();
+Result receive();
+void receive_ack();
 
-    Emac_configuration configuration;
-    Emac_filter filter;
-    Emac_phy phy;
-    Emac_dma dma;
-
-    Emac_interrupt_mask interrupt_mask;
-    Emac_interrupt_status interrupt_status;
-
-    Emac_descriptor_transmit _descriptor_transmit;
-    Emac_descriptor_receive _descriptor_receive;
-
-protected:
-    void _init_descriptor_transmit();
-    void _init_descriptor_receive();
-
-private:
-
-    unsigned char _buffer_transmit[2][4096];
-    unsigned char _buffer_receive[2][4096];
-
-}; /* class: Emac */
+}; /* namespace: emac */
 
 #endif /* define: emac_h */

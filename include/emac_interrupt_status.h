@@ -4,21 +4,19 @@
 /**
  * @file	emac_interrupt_status.h
  * @author	en2
- * @date	30-06-2020
+ * @date	06-10-2020
  * @brief	
  * @details	
 **/
 
-#include "emac_register.h"
-
-class Emac_interrupt_status : public Emac_register
+namespace emac::interrupt::status
 {
-public:
-    Emac_interrupt_status(unsigned int base);
 
-    bool rgmii();
+static constexpr auto base = 0xff702038;
 
-}; /* class: Emac_interrupt_status */
+bool rgmii_link_changed_get();
+
+}; /* namespace: emac::interrupt::status */
 
 
 #endif /* define: emac_interrupt_status_h */

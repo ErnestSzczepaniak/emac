@@ -1,235 +1,124 @@
 #include "emac_configuration.h"
+#include "emac_register.h"
 
-Emac_configuration::Emac_configuration(unsigned int base) : Emac_register(base)
+namespace emac::configuration
 {
-    
+
+void preamble_length_set(Preamble value)
+{
+    _set(base, value, 0, 2);
 }
 
-void Emac_configuration::preamble(Preamble value)
+void receive_state_machine_enable(bool value)
 {
-    set(value, 0, 2);
+    _set(base, value, 2, 1);
 }
 
-Emac_configuration::Preamble Emac_configuration::preamble()
+void transmit_state_machine_enable(bool value)
 {
-    return get<Preamble>(0, 2);
+    _set(base, value, 3, 1);
 }
 
-void Emac_configuration::receive_machine(bool value)
+void defferal_check_enable(bool value)
 {
-    set(value, 2, 1);
+    _set(base, value, 4, 1);
 }
 
-bool Emac_configuration::receive_machine()
+void back_off_limit_set(Back_off_limit value)
 {
-    return get(2, 1);
+    _set(base, value, 5, 2);
 }
 
-void Emac_configuration::transmit_machine(bool value)
+void strip_pad_crc_enable(bool value)
 {
-    set(value, 3, 1);
+    _set(base, value, 7, 1);
 }
 
-bool Emac_configuration::transmit_machine()
+bool link_get()
 {
-    return get(3, 1);
+    _get<bool>(base, 8, 1);
 }
 
-void Emac_configuration::defferal_check(bool value)
+void half_duplex_one_transmission_enable(bool value)
 {
-    set(value, 4, 1);
-}
-
-bool Emac_configuration::defferal_check()
-{
-    return get(4, 1);
-}
-
-void Emac_configuration::back_off_limit(Back_off_limit value)
-{
-    set(value, 5, 2);
-}
-
-Emac_configuration::Back_off_limit Emac_configuration::back_off_limit()
-{
-    return get<Back_off_limit>(5, 2);
-}
-
-void Emac_configuration::strip_pad_crc_all(bool value)
-{
-    set(value, 7, 1);
-}
-
-bool Emac_configuration::strip_pad_crc_all()
-{
-    return get(7, 1);
-}
-
-void Emac_configuration::link(bool value)
-{
-    set(value, 8, 1);
-}
-
-bool Emac_configuration::link()
-{
-    return get(8, 1);
-}
-
-void Emac_configuration::half_duplex_retransmission(bool value)
-{
-    set(!value, 9, 1);
+    _set(base, value, 9, 1);
 }   
-
-bool Emac_configuration::half_duplex_retransmission()
+void crc_check_enable(bool value)
 {
-    return !get(9, 1);
+    _set(base, value, 10, 1);
 }
 
-void Emac_configuration::crc_check(bool value)
+void full_duplex_enable(bool value)
 {
-    set(value, 10, 1);
+    _set(base, value, 11, 1);
 }
 
-bool Emac_configuration::crc_check()
+void loopback_enable(bool value)
 {
-    return get(10, 1);
+    _set(base, value, 12, 1);
 }
 
-void Emac_configuration::duplex(Duplex value)
+void half_duplex_reception_disable(bool value)
 {
-    set(value, 11, 1);
+    _set(base, value, 13, 1);
 }
 
-Emac_configuration::Duplex Emac_configuration::duplex()
-{
-    return get<Duplex>(11, 1);
-}
-
-void Emac_configuration::loopback(bool value)
-{
-    set(value, 12, 1);
-}
-
-bool Emac_configuration::loopback()
-{
-    return get(12, 1);
-}
-
-void Emac_configuration::half_duplex_reception(bool value)
-{
-    set(!value, 13, 1);
-}
-
-bool Emac_configuration::half_duplex_reception()
-{
-    return !get(13, 1);
-}
-
-void Emac_configuration::speed(Speed value)
+void speed_set(Speed value)
 {
     if (value == Speed::_1000_BASE_T)
     {
-        set(false, 15, 1);
+        _set(base, false, 15, 1);
     }
     else
     {
-        set(true, 15, 1);
-        set(value, 14, 1);
+        _set(base, true, 15, 1);
+        _set(base, value, 14, 1);
     }
 }
 
-Emac_configuration::Speed Emac_configuration::speed()
+void half_duplex_crs_disable(bool value)
 {
-    if (get(15, 1) == 0) return Speed::_1000_BASE_T;
-    else return get<Speed>(14, 1);
+    _set(base, value, 16, 1);
 }
 
-void Emac_configuration::half_duplex_ignore_crs(bool value)
+void interframe_gap_set(Interframe_gap value)
 {
-    set(value, 16, 1);
+    _set(base, value, 17, 3);
 }
 
-bool Emac_configuration::half_duplex_ignore_crs()
+void jumbo_frame_error_disable(bool value)
 {
-    return get(16, 1);
+    _set(base, value, 20, 1);
 }
 
-void Emac_configuration::interframe_gap(Interframe_gap value)
+void half_duplex_bursting_enable(bool value)
 {
-    set(value, 17, 3);
+    _set(base, value, 21, 1);
 }
 
-Emac_configuration::Interframe_gap Emac_configuration::interframe_gap()
+void transmitter_jabber_timer_disable(bool value)
 {
-    return get<Interframe_gap>(17, 3);
+    _set(base, value, 22, 1);
 }
 
-void Emac_configuration::jumbo_enable(bool value)
+void receiver_watchdog_disable(bool value)
 {
-    set(value, 20, 1);
+    _set(base, value, 23, 1);
 }
 
-bool Emac_configuration::jumbo_enable()
+void phy_forwarding_enable(bool value)
 {
-    return get(20, 1);
+    _set(base, value, 24, 1);
 }
 
-void Emac_configuration::half_duplex_bursting(bool value)
+void strip_crc_ethertype_enable(bool value)
 {
-    set(value, 21, 1);
+    _set(base, value, 25, 1);
 }
 
-bool Emac_configuration::half_duplex_bursting()
+void giant_frame_enable(bool value)
 {
-    return get(21, 1);
+    _set(base, value, 27, 1);
 }
 
-void Emac_configuration::transmitter_jabber(bool value) // inverse
-{
-    set(!value, 22, 1);
-}
-
-bool Emac_configuration::transmitter_jabber()
-{
-    return !get(22, 1);
-}
-
-void Emac_configuration::receiver_watchdog(bool value) // inverse
-{
-    set(!value, 23, 1);
-}
-
-bool Emac_configuration::receiver_watchdog()
-{
-    return !get(23, 1);
-}
-
-void Emac_configuration::phy_forwarding(bool value)
-{
-    set(value, 24, 1);
-}
-
-bool Emac_configuration::phy_forwarding()
-{
-    return get(24, 1);
-}
-
-void Emac_configuration::strip_crc_ethertype(bool value)
-{
-    set(value, 25, 1);
-}
-
-bool Emac_configuration::strip_crc_ethertype()
-{
-    return get(25, 1);
-}
-
-void Emac_configuration::giant_enable(bool value)
-{
-    set(value, 27, 1);
-}
-
-bool Emac_configuration::giant_enable()
-{
-    return get(27, 1);
-}
+}; /* namespace: emac::configuration */
